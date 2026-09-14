@@ -402,10 +402,12 @@
     function openMergeModal(sourceCard) {
       mergeSourceCard = sourceCard;
       const sourceCol = Number(sourceCard.dataset.col);
+      const sourceTiles = getTiles(sourceCard);
       const otherCards = Array.from(document.querySelectorAll(".card"))
-        .filter((c) => Number(c.dataset.col) !== sourceCol);
+        .filter((c) => Number(c.dataset.col) !== sourceCol)
+        .filter((c) => getTiles(c) >= sourceTiles);
 
-      mergeList.innerHTML = otherCards.map((c) => {
+      mergeList.innerHTML = otherCards.length ? otherCards.map((c) => {
         const name = c.querySelector(".name").textContent;
         const accent = c.style.getPropertyValue("--accent") || "#64748b";
         const tiles = getTiles(c);
@@ -415,7 +417,7 @@
             <span class="tiles-count">${tiles}칸</span>
           </button>
         `;
-      }).join("");
+      }).join("") : `<p class="modal-sub" style="margin:0;">합병 가능한(타일 수가 같거나 많은) 기업이 없습니다.</p>`;
 
       mergeModal.hidden = false;
     }
